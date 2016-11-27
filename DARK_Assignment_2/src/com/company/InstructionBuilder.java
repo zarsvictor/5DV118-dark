@@ -50,8 +50,6 @@ public class InstructionBuilder {
         }
     }
 
-    private static instructionType getType()
-
     private static instructionType getType(long value) {
         long op = Instruction.getXBits(value,6,32);
         long funct = Instruction.getXBits(value,6,6);
