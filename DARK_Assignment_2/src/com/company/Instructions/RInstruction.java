@@ -22,7 +22,7 @@ public class RInstruction extends Instruction {
     private String abbrRt;
     private String abbrShamt;
 
-    public RInstruction(String instruction) throws NotValidInstructionException {
+    public RInstruction(String instruction) {
         this.instruction = instruction;
         value = Long.decode(instruction);
         comment = "";

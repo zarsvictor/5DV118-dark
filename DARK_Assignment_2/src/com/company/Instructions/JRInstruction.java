@@ -20,7 +20,7 @@ public class JRInstruction extends Instruction{
     private String abbrRs;
     private String abbrRt;
 
-    public JRInstruction(String instruction) throws NotValidInstructionException {
+    public JRInstruction(String instruction) {
         this.instruction = instruction;
         value = Long.decode(instruction);
         comment = "";

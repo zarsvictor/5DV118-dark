@@ -6,10 +6,11 @@ import com.company.Instructions.*;
 
 /**
  * Created by c13vzs on 2016-11-14.
+ * Sets up an instruction either from a mnemonic string or hexadecimal or decimal string.
  */
 public class InstructionBuilder {
 
-    private enum instructionType{
+    private enum instructionType {
         R,
         I,
         J,
@@ -22,10 +23,29 @@ public class InstructionBuilder {
 
     }
 
+    private static Instruction buildInstruction(String instructionType, String instruction) {
+        switch (instructionType) {
+            case "R":
+                return new RInstruction(instruction);
+            case "J":
+                return new JInstruction(instruction);
+            case "I":
+                return new IInstruction(instruction);
+            case "JR":
+                return new JRInstruction(instruction);
+            case "B":
+                return new BInstruction(instruction);
+            default:
+                return null;
+        }
+    }
+
     public static Instruction getInstructionFromMnemonic(String instruction) {
         //TODO: Decode a string of memnomic instruction
+        //Splits the instruction with each space
         String iv[] = instruction.split(" ");
-        if(OpCodes.fromAbbr(iv[0]) != OpCodes.NONE) {
+        if (OpCodes.fromAbbr(iv[0]) != OpCodes.NONE) {
+            buildInstruction(OpCodes.fromAbbr(iv[0]).getType(),instruction);
         }
         return null;
     }
@@ -51,24 +71,24 @@ public class InstructionBuilder {
     }
 
     private static instructionType getType(long value) {
-        long op = Instruction.getXBits(value,6,32);
-        long funct = Instruction.getXBits(value,6,6);
+        long op = Instruction.getXBits(value, 6, 32);
+        long funct = Instruction.getXBits(value, 6, 6);
 
         //If op is 0 or 28 its of the type R
-        if(op == 0 || op == 28) {
+        if (op == 0 || op == 28) {
             //If the funct is 8 or 9 then its a jump (JR)
             if (funct == 8 || funct == 9) {
                 return instructionType.JR;
             } else {
                 return instructionType.R;
             }
-        //If op is 1 the type depends on the RT-field
+            //If op is 1 the type depends on the RT-field
         } else if (op == 1) {
-            long rt = Instruction.getXBits(value,5,16);
+            long rt = Instruction.getXBits(value, 5, 16);
             //If rt is any of these its an branch instruction
-            if((rt >= 0 && rt <= 3) || (rt >= 16 && rt <= 19)) {
+            if ((rt >= 0 && rt <= 3) || (rt >= 16 && rt <= 19)) {
                 return instructionType.B;
-            //Else it's an I instruction
+                //Else it's an I instruction
             } else {
                 return instructionType.I;
             }
